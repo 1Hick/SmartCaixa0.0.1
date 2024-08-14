@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCaixa - Configurações</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styleConfig.css') }}">
+    <link rel="icon" type="image/favicon.icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+    <header>
+        <h1>SmartCaixa - Configurações</h1>
+        
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('pdv') }}"><i class="fas fa-cash-register"></i> PDV</a></li>
+            <li><a href="{{ url_for('categorias') }}"><i class="fas fa-th"></i> Categorias</a></li>
+            <li><a href="{{ url_for('produtos') }}"><i class="fas fa-box"></i> Produtos</a></li>
+            <li><a href="{{ url_for('transacoes') }}"><i class="fas fa-receipt"></i> Transações</a></li>
+            <li><a href="{{ url_for('fechamento') }}"><i class="fas fa-calendar-check"></i> Fechamento</a></li>
+            <li><a href="{{ url_for('configuracoes') }}"><i class="fas fa-cogs"></i> Configurações</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </nav>
+    
+    
+    <div class="configuracoes-container">
+       
+        
+        {% if current_user.is_admin %}
+        <h2>Cadastro de Usuários</h2>
+        <form action="/add_usuario" method="post">
+            <label for="usuario">Usuário:</label>
+            <input type="text" id="usuario" name="usuario" required>
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+            <label for="nivel_acesso">Nível de Acesso:</label>
+            <select id="nivel_acesso" name="nivel_acesso">
+                <option value="admin">Admin</option>
+                <option value="caixa">Caixa</option>
+            </select>
+            <button type="submit">Adicionar Usuário</button>
+        </form>
+        
+        {% endif %}
+    </div>
+</body>
+</html>

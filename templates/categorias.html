@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCaixa - Categorias</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/favicon.icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #444;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            display: inline-block;
+        }
+        nav ul li a:hover {
+            background-color: #555;
+        }
+        .categorias-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .categorias-container h2 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin: 0;
+            border-radius: 5px 5px 0 0;
+        }
+        .categorias-container form {
+            margin-bottom: 20px;
+        }
+        .categorias-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .categorias-container input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .categorias-container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .categorias-container button:hover {
+            background-color: #0056b3;
+        }
+        .categorias-container ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .categorias-container ul li {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SmartCaixa - Categorias</h1>
+        
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('pdv') }}"><i class="fas fa-cash-register"></i> PDV</a></li>
+            <li><a href="{{ url_for('categorias') }}"><i class="fas fa-th"></i> Categorias</a></li>
+            <li><a href="{{ url_for('produtos') }}"><i class="fas fa-box"></i> Produtos</a></li>
+            <li><a href="{{ url_for('transacoes') }}"><i class="fas fa-receipt"></i> Transações</a></li>
+            <li><a href="{{ url_for('fechamento') }}"><i class="fas fa-calendar-check"></i> Fechamento</a></li>
+            <li><a href="{{ url_for('configuracoes') }}"><i class="fas fa-cogs"></i> Configurações</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </nav>
+    
+    
+    <div class="categorias-container">
+        <h2>Cadastro de Categorias</h2>
+        <form action="{{ url_for('add_categoria') }}" method="post">
+            <label for="nome_categoria">Nome da Categoria:</label>
+            <input type="text" id="nome_categoria" name="nome_categoria" required>
+            <button type="submit">Adicionar Categoria</button>
+        </form>
+        <h3>Categorias Cadastradas</h3>
+        <ul id="lista-categorias">
+            {% for categoria in categorias %}
+                <li>{{ categoria.nome }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

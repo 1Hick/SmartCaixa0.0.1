@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCaixa - Produtos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #444;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            display: inline-block;
+        }
+        nav ul li a:hover {
+            background-color: #555;
+        }
+        .produtos-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .produtos-container h2 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin: 0;
+            border-radius: 5px 5px 0 0;
+        }
+        .produtos-container form {
+            margin-bottom: 20px;
+        }
+        .produtos-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .produtos-container input[type="text"],
+        .produtos-container input[type="number"],
+        .produtos-container select,
+        .produtos-container input[type="file"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .produtos-container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .produtos-container button:hover {
+            background-color: #0056b3;
+        }
+        .produtos-container input[type="text"].search-bar {
+            width: calc(100% - 22px);
+            margin-bottom: 20px;
+        }
+        .produtos-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .produtos-container th, .produtos-container td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .produtos-container th {
+            background-color: #333;
+            color: #fff;
+        }
+        .produtos-container td img {
+            max-width: 100px;
+            height: auto;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            width: 80%;
+            margin: auto;
+            max-width: 500px;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SmartCaixa - Produtos</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('pdv') }}"><i class="fas fa-cash-register"></i> PDV</a></li>
+            <li><a href="{{ url_for('categorias') }}"><i class="fas fa-th"></i> Categorias</a></li>
+            <li><a href="{{ url_for('produtos') }}"><i class="fas fa-box"></i> Produtos</a></li>
+            <li><a href="{{ url_for('transacoes') }}"><i class="fas fa-receipt"></i> Transações</a></li>
+            <li><a href="{{ url_for('fechamento') }}"><i class="fas fa-calendar-check"></i> Fechamento</a></li>
+            <li><a href="{{ url_for('configuracoes') }}"><i class="fas fa-cogs"></i> Configurações</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </nav>
+    
+    <div class="produtos-container">
+        <h2>Cadastro de Produtos</h2>
+        <form action="{{ url_for('add_produto') }}" method="post" enctype="multipart/form-data">
+            <label for="nome_produto">Nome do Produto:</label>
+            <input type="text" id="nome_produto" name="nome_produto" required>
+            <label for="descricao_produto">Descrição:</label>
+            <input type="text" id="descricao_produto" name="descricao_produto">
+            <label for="codigo_barras">Código de Barras:</label>
+            <input type="text" id="codigo_barras" name="codigo_barras" required>
+            <label for="preco_produto">Preço:</label>
+            <input type="number" step="0.01" id="preco_produto" name="preco_produto" required>
+            <label for="estoque_produto">Quantidade em Estoque:</label>
+            <input type="number" id="estoque_produto" name="estoque_produto" required>
+            <label for="categoria_id">Categoria:</label>
+            <select id="categoria_id" name="categoria_id" required>
+                {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                {% endfor %}
+            </select>
+            <label for="imagem_produto">Imagem:</label>
+            <input type="file" id="imagem_produto" name="imagem_produto">
+            <button type="submit">Adicionar Produto</button>
+        </form>
+        
+        <input type="text" class="search-bar" id="search-bar" placeholder="Buscar produtos...">
+        
+        <h3>Produtos Cadastrados</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Código de Barras</th>
+                    <th>Preço</th>
+                    <th>Estoque</th>
+                    <th>Categoria</th>
+                    <th>Imagem</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="product-table-body">
+                {% for produto in produtos %}
+                    <tr>
+                        <td>{{ produto.nome }}</td>
+                        <td>{{ produto.descricao }}</td>
+                        <td>{{ produto.codigo_barras }}</td>
+                        <td>R$ {{ produto.preco }}</td>
+                        <td>{{ produto.estoque }}</td>
+                        <td>{{ produto.categoria.nome }}</td>
+                        <td>
+                            {% if produto.imagem %}
+                                <img src="{{ url_for('static', filename='imagens/' + produto.imagem) }}" alt="Imagem do produto">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='imagens/sem-imagem.png') }}" alt="Imagem padrão">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button type="button" onclick="openEditModal(this)"
+                                    data-id="{{ produto.id }}"
+                                    data-nome="{{ produto.nome }}"
+                                    data-descricao="{{ produto.descricao }}"
+                                    data-codigo_barras="{{ produto.codigo_barras }}"
+                                    data-preco="{{ produto.preco }}"
+                                    data-estoque="{{ produto.estoque }}"
+                                    data-categoria_id="{{ produto.categoria_id }}"
+                                    data-imagem="{{ produto.imagem }}">Editar</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="edit-modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2>Editar Produto</h2>
+            <form id="edit-form" action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="edit-produto-id" name="produto_id">
+                <label for="edit-nome_produto">Nome do Produto:</label>
+                <input type="text" id="edit-nome_produto" name="nome_produto" required>
+                <label for="edit-descricao_produto">Descrição:</label>
+                <input type="text" id="edit-descricao_produto" name="descricao_produto">
+                <label for="edit-codigo_barras">Código de Barras:</label>
+                <input type="text" id="edit-codigo_barras" name="codigo_barras" required>
+                <label for="edit-preco_produto">Preço:</label>
+                <input type="number" step="0.01" id="edit-preco_produto" name="preco_produto" required>
+                <label for="edit-estoque_produto">Quantidade em Estoque:</label>
+                <input type="number" id="edit-estoque_produto" name="estoque_produto" required>
+                <label for="edit-categoria_id">Categoria:</label>
+                <select id="edit-categoria_id" name="categoria_id" required>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                    {% endfor %}
+                </select>
+                <label for="edit-imagem_produto">Imagem:</label>
+                <input type="file" id="edit-imagem_produto" name="imagem_produto">
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('search-bar').addEventListener('input', function() {
+            var searchQuery = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#product-table-body tr');
+
+            rows.forEach(function(row) {
+                var cells = row.getElementsByTagName('td');
+                var match = false;
+
+                for (var i = 0; i < cells.length - 1; i++) { // Exclude last cell with actions
+                    if (cells[i].textContent.toLowerCase().includes(searchQuery)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                row.style.display = match ? '' : 'none';
+            });
+        });
+
+        function openEditModal(button) {
+            // Get data attributes from button
+            var produtoId = button.getAttribute('data-id');
+            var nomeProduto = button.getAttribute('data-nome');
+            var descricaoProduto = button.getAttribute('data-descricao');
+            var codigoBarras = button.getAttribute('data-codigo_barras');
+            var precoProduto = button.getAttribute('data-preco');
+            var estoqueProduto = button.getAttribute('data-estoque');
+            var categoriaId = button.getAttribute('data-categoria_id');
+            var imagemProduto = button.getAttribute('data-imagem');
+            
+            // Fill modal form fields
+            document.getElementById('edit-produto-id').value = produtoId;
+            document.getElementById('edit-nome_produto').value = nomeProduto;
+            document.getElementById('edit-descricao_produto').value = descricaoProduto;
+            document.getElementById('edit-codigo_barras').value = codigoBarras;
+            document.getElementById('edit-preco_produto').value = precoProduto;
+            document.getElementById('edit-estoque_produto').value = estoqueProduto;
+            document.getElementById('edit-categoria_id').value = categoriaId;
+            document.getElementById('edit-form').action = "/edit_produto/" + produtoId;
+            document.getElementById('edit-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+        }
+        
+    </script>
+</body>
+</html>

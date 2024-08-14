@@ -1,0 +1,115 @@
+/* Arquivo: style.css */
+
+/* Definindo cores principais */
+:root {
+    --cor-fundo: #f8f9fa;
+    --cor-principal: #007bff;
+    --cor-secundaria: #6c757d;
+    --cor-accent: #28a745;
+    --cor-texto: #343a40;
+    --cor-fundo-formulario: #ffffff;
+    --cor-botao: #007bff;
+    --cor-botao-hover: #0056b3;
+}
+
+/* Estilizando o body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilizando o header */
+header {
+    background-color: var(--cor-principal);
+    color: #ffffff;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* Estilizando o menu de navegação */
+nav {
+    background-color: var(--cor-secundaria);
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    display: inline-block;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 1rem;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    background-color: var(--cor-principal);
+}
+
+/* Estilizando o container de categorias */
+.categorias-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+    background-color: var(--cor-fundo-formulario);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilizando o formulário */
+.categorias-container form {
+    margin-bottom: 2rem;
+}
+
+.categorias-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.categorias-container input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--cor-secundaria);
+    border-radius: 5px;
+}
+
+.categorias-container button {
+    background-color: var(--cor-botao);
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.categorias-container button:hover {
+    background-color: var(--cor-botao-hover);
+}
+
+/* Estilizando a lista de categorias */
+#lista-categorias {
+    list-style: none;
+    padding: 0;
+}
+
+#lista-categorias li {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--cor-secundaria);
+}
+
+#lista-categorias li:last-child {
+    border-bottom: none;
+}

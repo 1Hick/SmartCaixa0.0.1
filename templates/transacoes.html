@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCaixa - Transações</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_transacoes.css') }}">
+    <link rel="icon" type="image/favicon.icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    
+</head>
+<body>
+    <header>
+        <h1>SmartCaixa - Transações</h1>
+        
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('pdv') }}"><i class="fas fa-cash-register"></i> PDV</a></li>
+            <li><a href="{{ url_for('categorias') }}"><i class="fas fa-th"></i> Categorias</a></li>
+            <li><a href="{{ url_for('produtos') }}"><i class="fas fa-box"></i> Produtos</a></li>
+            <li><a href="{{ url_for('transacoes') }}"><i class="fas fa-receipt"></i> Transações</a></li>
+            <li><a href="{{ url_for('fechamento') }}"><i class="fas fa-calendar-check"></i> Fechamento</a></li>
+            <li><a href="{{ url_for('configuracoes') }}"><i class="fas fa-cogs"></i> Configurações</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </nav>
+    
+    <div class="transacoes-container">
+        <h2>Transações</h2>
+        <form method="get" action="{{ url_for('transacoes') }}" class="filter-form">
+            <label for="filtro">Filtro:</label>
+            <select id="filtro" name="filtro">
+                <option value="hoje" {% if filtro == 'hoje' %}selected{% endif %}>Hoje</option>
+                <option value="semana" {% if filtro == 'semana' %}selected{% endif %}>Semana</option>
+                <option value="mes" {% if filtro == 'mes' %}selected{% endif %}>Mês</option>
+            </select>
+            <button type="submit">Aplicar Filtro</button>
+        </form>
+        <div class="total-sum">
+            <strong>Total dos Valores: R$ {{ total }}</strong>
+        </div>
+        <table id="transacoes-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Método de Pagamento</th>
+                    <th>Itens</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transacao_detalhada in transacoes_detalhadas %}
+                <tr>
+                    <td>{{ transacao_detalhada.data.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                    <td>R$ {{ transacao_detalhada.valor }}</td>
+                    <td>{{ transacao_detalhada.metodo_pagamento }}</td>
+                    <td>
+                        <ul>
+                            {% for item in transacao_detalhada.itens %}
+                            <li>{{ item.produto.nome }} - {{ item.quantidade }} x R$ {{ item.preco }} = R$ {{ item.quantidade * item.preco }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if total_transacoes > limite %}
+        <div class="pagination">
+            {% if pagina > 1 %}
+                <a href="{{ url_for('transacoes', filtro=filtro, page=pagina-1) }}">« Anterior</a>
+            {% else %}
+                <span class="disabled">« Anterior</span>
+            {% endif %}
+            <span>Página {{ pagina }}</span>
+            {% if total_transacoes > pagina * limite %}
+                <a href="{{ url_for('transacoes', filtro=filtro, page=pagina+1) }}">Próximo »</a>
+            {% else %}
+                <span class="disabled">Próximo »</span>
+            {% endif %}
+        </div>
+        {% endif %}
+        <form method="post" action="{{ url_for('gerar_relatorio') }}">
+            <input type="hidden" name="filtro" value="{{ filtro }}">
+            <button type="submit">Gerar Relatório</button>
+        </form>
+    </div>
+</body>
+</html>

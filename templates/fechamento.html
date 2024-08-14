@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCaixa - Fechamento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styleFechamento.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+</head>
+<body>
+    <header>
+        <h1>SmartCaixa - Fechamento</h1>
+        
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('pdv') }}"><i class="fas fa-cash-register"></i> PDV</a></li>
+            <li><a href="{{ url_for('categorias') }}"><i class="fas fa-th"></i> Categorias</a></li>
+            <li><a href="{{ url_for('produtos') }}"><i class="fas fa-box"></i> Produtos</a></li>
+            <li><a href="{{ url_for('transacoes') }}"><i class="fas fa-receipt"></i> Transações</a></li>
+            <li><a href="{{ url_for('fechamento') }}"><i class="fas fa-calendar-check"></i> Fechamento</a></li>
+            <li><a href="{{ url_for('configuracoes') }}"><i class="fas fa-cogs"></i> Configurações</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </nav>
+    
+    <div class="fechamento-container">
+        <h2>Fechamento do Caixa</h2>
+        <form method="post" action="{{ url_for('fechamento') }}">
+           
+            <label for="fundo_caixa">Fundo de Caixa:</label>
+            <input type="number" step="0.01" id="fundo_caixa" name="fundo_caixa" required>
+            <button type="submit">Finalizar Fechamento</button>
+        </form>
+        
+        {% if fechamento %}
+        <div>
+            <h3>Resumo do Fechamento</h3>
+            <p><strong>Data e Hora de Abertura:</strong> {{ fechamento.abertura }}</p>
+            <p><strong>Data e Hora de Fechamento:</strong> {{ fechamento.fechamento }}</p>
+            <p><strong>Fundo de Caixa:</strong> R$ {{ fechamento.fundo_caixa }}</p>
+            <p><strong>Total PIX:</strong> R$ {{ fechamento.total_pix|default('0.00') }}</p>
+            <p><strong>Total Débito:</strong> R$ {{ fechamento.total_debito|default('0.00') }}</p>
+            <p><strong>Total Crédito:</strong> R$ {{ fechamento.total_credito|default('0.00') }}</p>
+            <p><strong>Total Dinheiro:</strong> R$ {{ fechamento.total_dinheiro|default('0.00') }}</p>
+            
+            <p><strong>Total de Vendas:</strong> R$ {{ fechamento.total_vendas|default('0.00') }}</p>
+            <p><strong>Saldo Final:</strong> R$ {{ fechamento.saldo_final|default('0.00') }}</p>
+            
+            
+            
+            <!-- Formulário para gerar relatório em PDF -->
+            <form method="post" action="{{ url_for('gerar_pdf_fechamento') }}">
+                <input type="hidden" name="abertura" value="{{ fechamento.abertura }}">
+                <input type="hidden" name="fechamento" value="{{ fechamento.fechamento }}">
+                <input type="hidden" name="total_pix" value="{{ fechamento.total_pix }}">
+                <input type="hidden" name="total_debito" value="{{ fechamento.total_debito }}">
+                <input type="hidden" name="total_credito" value="{{ fechamento.total_credito }}">
+                <input type="hidden" name="total_dinheiro" value="{{ fechamento.total_dinheiro }}">
+                <input type="hidden" name="fundo_caixa" value="{{ fechamento.fundo_caixa }}">
+                <input type="hidden" name="total_vendas" value="{{ fechamento.total_vendas }}">
+                <input type="hidden" name="saldo_final" value="{{ fechamento.saldo_final }}">
+                <button type="submit">Gerar Relatório em PDF</button>
+            </form>
+            
+            <!-- Adicionar Observações -->
+            <h4>Observações</h4>
+            <form method="post" action="{{ url_for('adicionar_observacao') }}">
+                <textarea name="observacoes" rows="4" cols="50" placeholder="Adicione suas observações aqui..."></textarea>
+                <input type="hidden" name="fechamento_id" value="{{ fechamento.id }}">
+                <button type="submit">Adicionar Observação</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
